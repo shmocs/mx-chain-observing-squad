@@ -1,78 +1,122 @@
 version: '3'
 
 services:
- observer-0:
-   image: ${ORGANIZATION}/${OBSERVER_IMAGE}
-   ports:
-     - "8080:8080"
-     - "10000:37373"
-   environment:
-     - SHARD=0
-   volumes:
-     - ${SQUAD_DIRECTORY}/node-0/db:/go/mx-chain-go/cmd/node/db
-     - ${SQUAD_DIRECTORY}/node-0/logs:/go/mx-chain-go/cmd/node/logs
-     - ${SQUAD_DIRECTORY}/node-0/config:/config
-   command: --destination-shard-as-observer=${SHARD_0} --validator-key-pem-file=/config/observerKey_${SHARD_0}.pem --display-name="${DISPLAY_NAME_0}"
-   networks:
-     multiversx-squad:
-       ipv4_address: 10.0.0.6
+  observer-0:
+    image: ${ORGANIZATION}/${OBSERVER_IMAGE}
+    ports:
+      - "8090:8080"
+      - "10000:37373"
+    environment:
+      - SHARD=0
+    volumes:
+      - ${SQUAD_DIRECTORY}/node-0/db:/go/mx-chain-go/cmd/node/db
+      - ${SQUAD_DIRECTORY}/node-0/logs:/go/mx-chain-go/cmd/node/logs
+      - ${SQUAD_DIRECTORY}/node-0/config:/config
+    command: --destination-shard-as-observer=${SHARD_0} --validator-key-pem-file=/config/observerKey_${SHARD_0}.pem --keybase-identity="${IDENTITY}" --display-name="${DISPLAY_NAME_0}" --operation-mode snapshotless-observer --log-level=*:INFO
+    networks:
+      multiversx-squad:
+        ipv4_address: 10.0.0.6
 
- observer-1:
-   image: ${ORGANIZATION}/${OBSERVER_IMAGE}
-   ports:
-     - "8081:8080"
-     - "10001:37373"
-   environment:
-     - SHARD=1 
-   volumes:
-     - ${SQUAD_DIRECTORY}/node-1/db:/go/mx-chain-go/cmd/node/db
-     - ${SQUAD_DIRECTORY}/node-1/logs:/go/mx-chain-go/cmd/node/logs
-     - ${SQUAD_DIRECTORY}/node-1/config:/config
-   command: --destination-shard-as-observer=${SHARD_1} --validator-key-pem-file=/config/observerKey_${SHARD_1}.pem --display-name="${DISPLAY_NAME_1}"
-   networks:
-     multiversx-squad:
-       ipv4_address: 10.0.0.5
- observer-2:
-   image: ${ORGANIZATION}/${OBSERVER_IMAGE}
-   ports:
-    - "8082:8080" 
-    - "10002:37373"
-   environment:
-     - SHARD=2
-   volumes:
-     - ${SQUAD_DIRECTORY}/node-2/db:/go/mx-chain-go/cmd/node/db
-     - ${SQUAD_DIRECTORY}/node-2/logs:/go/mx-chain-go/cmd/node/logs
-     - ${SQUAD_DIRECTORY}/node-2/config:/config
-   command: --destination-shard-as-observer=${SHARD_2} --validator-key-pem-file=/config/observerKey_${SHARD_2}.pem --display-name="${DISPLAY_NAME_2}"
-   networks:
-     multiversx-squad:
-       ipv4_address: 10.0.0.4
+  observer-1:
+    image: ${ORGANIZATION}/${OBSERVER_IMAGE}
+    ports:
+      - "8091:8080"
+      - "10001:37373"
+    environment:
+      - SHARD=1
+    volumes:
+      - ${SQUAD_DIRECTORY}/node-1/db:/go/mx-chain-go/cmd/node/db
+      - ${SQUAD_DIRECTORY}/node-1/logs:/go/mx-chain-go/cmd/node/logs
+      - ${SQUAD_DIRECTORY}/node-1/config:/config
+    command: --destination-shard-as-observer=${SHARD_1} --validator-key-pem-file=/config/observerKey_${SHARD_1}.pem --keybase-identity="${IDENTITY}" --display-name="${DISPLAY_NAME_1}" --operation-mode snapshotless-observer --log-level=*:INFO
+    networks:
+      multiversx-squad:
+        ipv4_address: 10.0.0.5
+  observer-2:
+    image: ${ORGANIZATION}/${OBSERVER_IMAGE}
+    ports:
+      - "8092:8080"
+      - "10002:37373"
+    environment:
+      - SHARD=2
+    volumes:
+      - ${SQUAD_DIRECTORY}/node-2/db:/go/mx-chain-go/cmd/node/db
+      - ${SQUAD_DIRECTORY}/node-2/logs:/go/mx-chain-go/cmd/node/logs
+      - ${SQUAD_DIRECTORY}/node-2/config:/config
+    command: --destination-shard-as-observer=${SHARD_2} --validator-key-pem-file=/config/observerKey_${SHARD_2}.pem --keybase-identity="${IDENTITY}" --display-name="${DISPLAY_NAME_2}" --operation-mode snapshotless-observer --log-level=*:INFO
+    networks:
+      multiversx-squad:
+        ipv4_address: 10.0.0.4
 
- observer-meta:
-   image: ${ORGANIZATION}/${OBSERVER_IMAGE}
-   ports:
-     - "8083:8080"
-     - "10003:37373"
-   environment:
-     - SHARD=metachain
-   volumes:
-     - ${SQUAD_DIRECTORY}/node-metachain/db:/go/mx-chain-go/cmd/node/db
-     - ${SQUAD_DIRECTORY}/node-metachain/logs:/go/mx-chain-go/cmd/node/logs
-     - ${SQUAD_DIRECTORY}/node-metachain/config:/config
-   command: --destination-shard-as-observer=${SHARD_M} --validator-key-pem-file=/config/observerKey_${SHARD_M}.pem --display-name="${DISPLAY_NAME_M}"
-   networks:
-     multiversx-squad:
-       ipv4_address: 10.0.0.3
+  observer-meta:
+    image: ${ORGANIZATION}/${OBSERVER_IMAGE}
+    ports:
+      - "8093:8080"
+      - "10003:37373"
+    environment:
+      - SHARD=metachain
+    volumes:
+      - ${SQUAD_DIRECTORY}/node-metachain/db:/go/mx-chain-go/cmd/node/db
+      - ${SQUAD_DIRECTORY}/node-metachain/logs:/go/mx-chain-go/cmd/node/logs
+      - ${SQUAD_DIRECTORY}/node-metachain/config:/config
+    command: --destination-shard-as-observer=${SHARD_M} --validator-key-pem-file=/config/observerKey_${SHARD_M}.pem --keybase-identity="${IDENTITY}" --display-name="${DISPLAY_NAME_M}" --operation-mode snapshotless-observer --log-level=*:INFO
+    networks:
+      multiversx-squad:
+        ipv4_address: 10.0.0.3
 
- proxy:
-   image: ${ORGANIZATION}/${PROXY_IMAGE}
-   ports:
-     - "8079:8079"
-   environment:
-     - IP=10.0.0.2
-   networks:
-     multiversx-squad:
-       ipv4_address: 10.0.0.2
+  proxy:
+    image: ${ORGANIZATION}/${PROXY_IMAGE}
+    ports:
+      - "8079:8079"
+    environment:
+      - IP=10.0.0.2
+    networks:
+      multiversx-squad:
+        ipv4_address: 10.0.0.2
+
+#  redis:
+#    image: redis:7
+#    container_name: redis
+#    hostname: redis
+#    restart: always
+#
+#    # Apply custom arguments to redis startup
+#    command: redis-server --include /usr/local/etc/redis/redis.conf
+#
+#    environment:
+#      - REDIS_HOST_NAME=redis
+#
+#    ports:
+#      # [local-machine:]local-port:docker-port
+#      - "63791:63791"
+#
+#    volumes:
+#      - ./data/redis:/data
+#      - ./configs/redis:/usr/local/etc/redis
+#      - ./data/history/redis/.bash_history:/root/.bash_history:rw
+#
+#  rediscommander:
+#    image: rediscommander/redis-commander:latest
+#    container_name: rediscmd
+#    hostname: rediscommander
+#    restart: always
+#    environment:
+#      - REDIS_HOSTS=mvx-notifier:redis:63791:1
+#    ports:
+#      # [local-machine:]local-port:docker-port
+#      - "8081:8081"
+#
+#    depends_on:
+#      - redis
+#
+#
+#  rabbitmq:
+#    image: "rabbitmq:3-management"
+#    container_name: rabbitmq
+#    hostname: rabbitmq
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
 
 networks:
   multiversx-squad:
